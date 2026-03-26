@@ -1,1 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HVAC Estimator</title>
+</head>
+<body style="font-family: Arial; text-align: center; padding: 50px;">
 
+<h1>HVAC Estimator Tool</h1>
+
+<input type="file" id="fileInput" />
+<br><br>
+
+<button onclick="analyze()">Analyze Plans</button>
+
+<p id="output"></p>
+
+<script>
+async function analyze() {
+  const file = document.getElementById("fileInput").files[0];
+
+  if (!file) {
+    alert("Upload a PDF first.");
+    return;
+  }
+
+  document.getElementById("output").innerText = "Analyzing with AI...";
+
+  try {
+    const response = await fetch("/api/analyze", {
+      method: "POST"
+    });
+
+    const data = await response.json();
+
+    if (data.error) {
+      document.getElementById("output").innerText = "Error: " + data.error;
+      return;
+    }
+
+    document.getElementById("output").innerText = data.result;
+
+  } catch (err) {
+    document.getElementById("output").innerText = "Something went wrong.";
+  }
+}
+</script>
+
+</body>
+</html>
